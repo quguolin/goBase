@@ -10,9 +10,11 @@ func main() {
 	go func() {
 		fmt.Println("GO Runtime and Channel!")
 		c <- true
+		close(c)
 	}()
 
-	<-c //程序在这里被阻塞
-
+	for v := range c {
+		fmt.Println(v)
+	}
 	fmt.Println("main function end--------")
 }
