@@ -12,5 +12,7 @@ func main() {
 		c <- true
 	}()
 
-	<-c
+	<-c //程序在这里被阻塞
+
+	fmt.Println("main function end--------")
 }
