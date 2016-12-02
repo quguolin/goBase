@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{.Title}}</title>
+
 
    
     
@@ -25,6 +25,13 @@
 
 <h1>你好，世界！</h1>
 
+{{range .}}
+{{.}}
+{{end}}
+
+{{range $key,$value:=.}}
+<li><strong>{{$key}}</strong>:{{$value}}</li>
+{{end}}
 <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script src="./bootstrap/js/bootstrap.min.js"></script>
 

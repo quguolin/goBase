@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+type Person struct {
+	Name  string
+	Email []string
+}
+
 func main() {
 
 	http.HandleFunc("/", temp) //设置访问路由
@@ -22,14 +27,20 @@ func temp(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	data := struct {
-		Title string
-	}{
-		Title: "golang html template",
-	}
+	//	Person := Person{
+	//		Name: "Json",
+	//		Email: []string{
+	//			"aa@163.com",
+	//			"bb@163.com",
+	//		},
+	//	}
 
-	//	err = t.Execute(os.Stdout, data)
-	err = t.Execute(w, data)
+	Person := []string{
+		"11111111111",
+		"222222222222",
+		"3333333333333",
+	}
+	err = t.Execute(w, Person)
 	if err != nil {
 		log.Fatal(err)
 	}
