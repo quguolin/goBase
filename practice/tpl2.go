@@ -27,19 +27,19 @@ func temp(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	//	Person := Person{
-	//		Name: "Json",
-	//		Email: []string{
-	//			"aa@163.com",
-	//			"bb@163.com",
-	//		},
-	//	}
-
-	Person := []string{
-		"11111111111",
-		"222222222222",
-		"3333333333333",
+	Person := Person{
+		Name: "Json",
+		Email: []string{
+			"aa@163.com",
+			"bb@163.com",
+		},
 	}
+
+	//	Person := []string{
+	//		"11111111111",
+	//		"222222222222",
+	//		"3333333333333",
+	//	}
 	err = t.Execute(w, Person)
 	if err != nil {
 		log.Fatal(err)
