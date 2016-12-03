@@ -8,19 +8,19 @@ import (
 )
 
 func main() {
+
 	files, _ := ioutil.ReadDir("./")
 
+	test := make(map[string]interface{})
+
 	for _, f := range files {
-		file_info := make(map[string]string)
-		//		file_info["is_dir"] = string(f.IsDir())
-		//		file_info["mod_tile"] = string(f.ModTime())
-
-		file_info["name"] = string(f.Name())
-		file_info["size"] = string(f.Size())
-
-		fmt.Println(file_info)
+		test["is_dir"] = f.IsDir()
+		test["mod_time"] = f.ModTime()
+		test["name"] = f.Name()
+		test["size"] = f.Size()
 	}
 
+	fmt.Println(test)
 	//	http.HandleFunc("/", readDir) //设置访问路由
 
 	//	err := http.ListenAndServe(":8080", nil) //设置监听端口
