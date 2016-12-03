@@ -2,21 +2,37 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
+	files, _ := ioutil.ReadDir("./")
 
-	http.HandleFunc("/", readDir) //设置访问路由
+	for _, f := range files {
+		file_info := make(map[string]string)
+		//		file_info["is_dir"] = string(f.IsDir())
+		//		file_info["mod_tile"] = string(f.ModTime())
 
-	err := http.ListenAndServe(":8080", nil) //设置监听端口
-	if err != nil {
-		log.Fatal("ListenAndServe:", err)
+		file_info["name"] = string(f.Name())
+		file_info["size"] = string(f.Size())
+
+		fmt.Println(file_info)
 	}
+
+	//	http.HandleFunc("/", readDir) //设置访问路由
+
+	//	err := http.ListenAndServe(":8080", nil) //设置监听端口
+	//	if err != nil {
+	//		log.Fatal("ListenAndServe:", err)
+	//	}
+}
+
+type file struct {
+	Name  string
+	IsDir bool
+	Size  uint32
 }
 
 func readDir(w http.ResponseWriter, r *http.Request) {
@@ -43,18 +59,20 @@ func readDir(w http.ResponseWriter, r *http.Request) {
 
 	//		fmt.Fprint(w, "\n")
 	//	}
-	dir := []string{}
 
-	files, _ := ioutil.ReadDir("./")
-	for _, file := range files {
-		dir = append(dir, file.Name())
-	}
+	//	file_info = make(map[string]string)
+	//	files_info = make(map[int]map[string]string)
 
-	t, err := template.ParseFiles("fileServer.html")
-	t.Execute(w, dir)
-	if err != nil {
-		log.Fatal(err)
-	}
+	//	files, _ := ioutil.ReadDir("./")
+	//	for _, file := range files {
+
+	//	}
+
+	//	t, err := template.ParseFiles("fileServer.html")
+	//	t.Execute(w, dir)
+	//	if err != nil {
+	//		log.Fatal(err)
+	//	}
 
 }
 
