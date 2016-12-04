@@ -5,22 +5,36 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 func main() {
 
 	files, _ := ioutil.ReadDir("./")
 
-	test := make(map[string]interface{})
+	file_infs := make(map[int]map[string]string)
 
-	for _, f := range files {
-		test["is_dir"] = f.IsDir()
-		test["mod_time"] = f.ModTime()
-		test["name"] = f.Name()
-		test["size"] = f.Size()
+	for index, f := range files {
+		file_inf := make(map[string]string)
+
+		file_inf["is_dir"] = strconv.FormatBool(f.IsDir())
+		file_inf["name"] = f.Name()
+		fmt.Println(f.Size())
+		file_inf["size"] = strconv.FormatInt(f.Size(), 10)
+
+		t := f.ModTime()
+		file_inf["mod_time"] = t.Format("2006-01-02 15:04:05")
+
+		file_inf["mode"] = strconv.FormatInt(f.Size(), 10)
+
+		file_infs[index] = file_inf
 	}
 
-	fmt.Println(test)
+	for _, value := range file_infs {
+		fmt.Println(value)
+	}
+
+	//	fmt.Println(test)
 	//	http.HandleFunc("/", readDir) //设置访问路由
 
 	//	err := http.ListenAndServe(":8080", nil) //设置监听端口
