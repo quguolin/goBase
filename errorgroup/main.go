@@ -50,7 +50,7 @@ func main() {
 		return nil
 	})
 	group.Go(func() error {
-		result2, err = httpGet(ctx, "http://www.bilibili.com/")
+		result2, err = httpGet(ctx, "http://www.qq.com/")
 		return err
 	})
 	//wait all group to complete
