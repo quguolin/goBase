@@ -5,7 +5,7 @@ import (
 )
 
 //defer 被插入到return 之前执行
-func f1() (result int) {
+func f4() (result int) {
 	result = 0
 	defer func() {
 		result++
@@ -15,7 +15,7 @@ func f1() (result int) {
 }
 
 //defer 被插入到赋值和返回之间
-func f2() (r int) {
+func f5() (r int) {
 	t := 5
 	defer func() {
 		t += 5
@@ -24,7 +24,7 @@ func f2() (r int) {
 	return t
 }
 
-func f3() (r int) {
+func f6() (r int) {
 	r = 1
 	defer func(r int) {
 		r = r + 5 //这里改的r是传值传进去的r，不会改变要返回的那个r值
