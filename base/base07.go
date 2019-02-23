@@ -4,32 +4,32 @@ import (
 	"fmt"
 )
 
-type Human struct {
+type Human2 struct {
 	name  string
 	age   int
 	phone string
 }
 
-type Student struct {
-	Human  //匿名字段
+type Student2 struct {
+	Human2 //匿名字段
 	school string
 }
 
-type Employee struct {
-	Human   //匿名字段
+type Employee2 struct {
+	Human2  //匿名字段
 	company string
 }
 
-func (h *Human) SayHi() {
+func (h *Human2) SayHi() {
 	fmt.Println("Human SayHi method:", h.name, h.phone)
 }
 
 //重写父类方法
-func (h *Student) SayHi() {
-	fmt.Println("Student SayHi method:", h.name, h.phone)
+func (h *Student2) SayHi() {
+	fmt.Println("Student SayHi method:", h.name, h.age)
 }
 func main() {
-	mark := Student{Human{"Mark", 25, "111111"}, "MIT"}
+	mark := Student2{Human2{"Mark", 25, "123456"}, "MIT"}
 	//	fmt.Println(mark)
 	mark.SayHi()
 }
