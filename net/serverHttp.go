@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"runtime"
 )
 
 type Context struct {
@@ -34,7 +35,7 @@ func New() *Server {
 
 func Default() *Server {
 	engine := New()
-	engine.Use(Logger(), Test())
+	engine.Use(Logger(), Recovery())
 	return engine
 }
 
@@ -49,12 +50,24 @@ func Logger() HandlerFunc {
 	}
 }
 
-func Test() HandlerFunc {
+func Recovery() HandlerFunc {
 	return func(context *Context) {
-		fmt.Println("Test")
+		defer func() {
+			if i := recover(); i != nil {
+				size := 1024 * 1024
+				buf := make([]byte, size)
+				rs := runtime.Stack(buf, false)
+				if rs > size {
+					rs = size
+				}
+				buf = buf[:rs]
+				fmt.Println(string(buf))
+			}
+		}()
 		context.Next()
 	}
 }
+
 func (c *Context) Next() {
 	c.index++
 	s := int8(len(c.handlers))
@@ -100,7 +113,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (engine *Server) Run(addr string) {
-	http.ListenAndServe(addr, engine)
+	if err := http.ListenAndServe(addr, engine); err != nil {
+		panic(err)
+	}
 }
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.String()
