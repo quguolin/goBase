@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"io"
 	"testing"
 )
@@ -18,6 +17,8 @@ func init()  {
 }
 
 func BenchmarkFLog_Write(b *testing.B) {
-	w.Write([]byte(bytes.Repeat([]byte("testtesttesttesttesttest"),1000000)))
-	w.Write([]byte("\n"))
+	for i:=0;i<b.N;i++{
+		w.Write([]byte([]byte("hello world")))
+		w.Write([]byte("\n"))
+	}
 }

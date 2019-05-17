@@ -29,6 +29,7 @@ func NewLog() (*fLog, error) {
 		ch:     ch,
 		wg:     wg,
 	}
+	f.wg.Add(1)
 	go f.daemon()
 	return f, nil
 }
