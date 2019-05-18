@@ -53,7 +53,8 @@ func (l *fLog) daemon() {
 }
 
 func (l *fLog) Write(p []byte) (int, error) {
-	buf := &bytes.Buffer{}
+	//buf := &bytes.Buffer{}
+	buf := bytes.NewBuffer(make([]byte, 0, len(p)))
 	buf.Write(p)
 	select {
 	case l.ch <- buf:
