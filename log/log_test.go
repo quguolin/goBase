@@ -18,7 +18,13 @@ func init()  {
 
 func BenchmarkFLog_Write(b *testing.B) {
 	for i:=0;i<b.N;i++{
-		w.Write([]byte([]byte("hello world")))
-		w.Write([]byte("\n"))
+		_,err = w.Write([]byte([]byte("hello world")))
+		if err != nil{
+			b.Error(err)
+		}
+		_,err = w.Write([]byte("\n"))
+		if err != nil{
+			b.Error(err)
+		}
 	}
 }
