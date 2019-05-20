@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sync"
+	"time"
 )
 
 type fLog struct {
@@ -21,7 +22,7 @@ func NewLog() (*fLog, error) {
 		return nil, err
 	}
 	stdLog := log.New(os.Stderr, "fileLog", log.LstdFlags)
-	ch := make(chan *bytes.Buffer, 10)
+	ch := make(chan *bytes.Buffer, 1024*100)
 	wg := &sync.WaitGroup{}
 	f := &fLog{
 		fp:     fp,
@@ -30,7 +31,7 @@ func NewLog() (*fLog, error) {
 		wg:     wg,
 	}
 	f.wg.Add(1)
-	go f.daemon()
+	go f.consume()
 	return f, nil
 }
 
@@ -40,13 +41,20 @@ func (l *fLog) close() error {
 	return nil
 }
 
-func (l *fLog) daemon() {
+func (l *fLog) consume() {
 	defer l.wg.Done()
+	bf := &bytes.Buffer{}
+	tk := time.NewTicker(10*time.Millisecond)
 	for {
 		select {
 		case v, ok := <-l.ch:
 			if ok {
-				l.write(v.Bytes())
+				bf.Write(v.Bytes())
+			}
+		case <-tk.C:
+			if bf.Len()>0{
+				l.write(bf.Bytes())
+				bf.Reset()
 			}
 		}
 	}
