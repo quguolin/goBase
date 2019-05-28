@@ -3,12 +3,10 @@ package main
 import (
 	"fmt"
 	"net"
-	"sync"
 	"time"
 )
 
 type ConnPool struct {
-	mu sync.Mutex
 	connChans chan net.Conn
 }
 
@@ -28,16 +26,17 @@ func newConn() *ConnPool {
 }
 
 func (c *ConnPool)getCon() net.Conn {
-	c.mu.Lock()
 	conn := <-c.connChans
-	c.mu.Unlock()
 	return conn
 }
 
-func (c *ConnPool)putConn(conn net.Conn)  {
-	c.mu.Lock()
-	c.connChans<-conn
-	c.mu.Unlock()
+func (c *ConnPool)putConn(conn net.Conn)(err error){
+	select {
+		case c.connChans<-conn:
+		default:
+			err = fmt.Errorf("pool is full")
+	}
+	return
 }
 
 func (c *ConnPool)get()  {
