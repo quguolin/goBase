@@ -7,65 +7,61 @@ import (
 	"time"
 )
 
-var(
-	connChans chan net.Conn
+type ConnPool struct {
 	mu sync.Mutex
-)
+	connChans chan net.Conn
+}
 
-func newConn() (net.Conn,error) {
-	conn, err := net.Dial("tcp", "127.0.0.1:8080") // TCP连接
-	if err != nil{
-		return nil,err
+func newConn() *ConnPool {
+	c := &ConnPool{
+		connChans:make(chan net.Conn,10),
 	}
-	return conn,err
-}
-
-func getCon() net.Conn {
-	mu.Lock()
-	conn := <-connChans
-	mu.Unlock()
-	return conn
-}
-
-func putConn(conn net.Conn)  {
-	mu.Lock()
-	connChans<-conn
-	mu.Unlock()
-}
-
-func get()  {
-	fmt.Println("start get connect")
-	c := getCon()
-	c.Write([]byte("hello"))
-	fmt.Println("get connect")
-	time.Sleep(10*time.Second)
-	putConn(c)
-	fmt.Println("put connect")
-}
-
-func new()  {
 	for i:=0 ;i<10;i++{
-		c,err := newConn()
+		conn,err := net.Dial("tcp", "127.0.0.1:8080")
 		if err != nil{
 			fmt.Println(err)
 			continue
 		}
-		connChans<-c
+		c.connChans<-conn
 	}
+	return c
 }
 
-func count()  {
+func (c *ConnPool)getCon() net.Conn {
+	c.mu.Lock()
+	conn := <-c.connChans
+	c.mu.Unlock()
+	return conn
+}
+
+func (c *ConnPool)putConn(conn net.Conn)  {
+	c.mu.Lock()
+	c.connChans<-conn
+	c.mu.Unlock()
+}
+
+func (c *ConnPool)get()  {
+	fmt.Println("start get connect")
+	conn := c.getCon()
+	conn.Write([]byte("hello"))
+	fmt.Println("get one connect")
+	time.Sleep(10*time.Second)
+	c.putConn(conn)
+	fmt.Println("put connect")
+}
+
+
+func count(c *ConnPool)  {
 	for{
-		fmt.Println("len is ",len(connChans),"cap is ",cap(connChans))
+		fmt.Println("len is ",len(c.connChans),"cap is ",cap(c.connChans))
 		time.Sleep(time.Second)
 	}
 }
 
 func main()  {
-	connChans = make(chan net.Conn,10)
-	new()
-	go count()
-	go get()
+	c := newConn()
+	go count(c)
+	go c.get()
 	for{
 		time.Sleep(time.Second)
 	}
