@@ -7,14 +7,18 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"sync/atomic"
 	"time"
 )
+
+const flagClosed = 1
 
 type fLog struct {
 	fp     *os.File
 	stdLog *log.Logger
 	ch     chan *bytes.Buffer
 	wg     *sync.WaitGroup
+	closed int32
 }
 
 type Config struct {
@@ -54,12 +58,6 @@ func NewLog(cf *Config) (*fLog, error) {
 	return f, nil
 }
 
-func (l *fLog) close() error {
-	close(l.ch)
-	l.wg.Wait()
-	return nil
-}
-
 func (l *fLog) consume() {
 	defer l.wg.Done()
 	bf := &bytes.Buffer{}
@@ -76,11 +74,25 @@ func (l *fLog) consume() {
 				bf.Reset()
 			}
 		}
+		if atomic.LoadInt32(&l.closed) != flagClosed {
+			continue
+		}
+		//log closed and read all from buffer and channel
+		l.write(bf.Bytes())
+		for bf := range l.ch{
+			l.write(bf.Bytes())
+		}
+		return
 	}
 }
 
 func (l *fLog) Write(p []byte) (int, error) {
 	//buf := &bytes.Buffer{}
+	//log closed
+	if atomic.LoadInt32(&l.closed) == flagClosed {
+		l.stdLog.Printf("%s",p)
+		return 0,fmt.Errorf("log is closed")
+	}
 	buf := bytes.NewBuffer(make([]byte, 0, len(p)))
 	buf.Write(p)
 	select {
@@ -100,17 +112,9 @@ func (l *fLog) write(p []byte) error {
 	return nil
 }
 
-//func main() {
-//	var (
-//		w   io.Writer
-//		err error
-//	)
-//	if w, err = NewLog(); err != nil {
-//		panic(err)
-//	}
-//	for {
-//		w.Write([]byte("test"))
-//		w.Write([]byte("\n"))
-//		time.Sleep(time.Second)
-//	}
-//}
+func (l *fLog) Close() error {
+	atomic.StoreInt32(&l.closed, flagClosed)
+	close(l.ch)
+	l.wg.Wait()
+	return nil
+}
