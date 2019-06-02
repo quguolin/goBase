@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -11,7 +12,11 @@ import (
 	"time"
 )
 
-const flagClosed = 1
+const (
+	flagClosed = 1
+	_keyTime = "time"
+	_timeFormat = "2006-01-02 15:04:05.999999"
+)
 
 type fLog struct {
 	fp     *os.File
@@ -103,6 +108,19 @@ func (l *fLog) Write(p []byte) (int, error) {
 	}
 }
 
+func (l *fLog) WriteBuf(buf *bytes.Buffer) (int, error) {
+	if atomic.LoadInt32(&l.closed) == flagClosed {
+		l.stdLog.Println(buf.String())
+		return 0,fmt.Errorf("log is closed")
+	}
+	select {
+	case l.ch <- buf:
+		return buf.Len(), nil
+	default:
+		return 0, fmt.Errorf("log channel is full")
+	}
+}
+
 func (l *fLog) write(p []byte) error {
 	_, err := l.fp.Write(p)
 	if err != nil {
@@ -116,5 +134,16 @@ func (l *fLog) Close() error {
 	atomic.StoreInt32(&l.closed, flagClosed)
 	close(l.ch)
 	l.wg.Wait()
+	return nil
+}
+
+func (l *fLog)Log(c context.Context,args ...Field)(error)  {
+	buf :=&bytes.Buffer{}
+	buf.WriteString("info:hello world!")
+	buf.WriteString(_keyTime)
+	buf.WriteString(time.Now().Format(_timeFormat))
+	buf.WriteString("\n")
+	l.WriteBuf(buf)
+	//l.write(buf.Bytes())
 	return nil
 }
