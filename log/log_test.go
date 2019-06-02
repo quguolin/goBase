@@ -11,7 +11,10 @@ var (
 )
 
 func init()  {
-	if w, err = NewLog(); err != nil {
+	cf := &Config{
+		Dir:"/data/log/test/info.log",
+	}
+	if w, err = NewLog(cf); err != nil {
 		panic(err)
 	}
 }

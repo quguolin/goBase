@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -16,8 +17,26 @@ type fLog struct {
 	wg     *sync.WaitGroup
 }
 
-func NewLog() (*fLog, error) {
-	fp, err := os.OpenFile("/data/log/test/test.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+type Config struct {
+	Dir string
+}
+
+func NewLog(cf *Config) (*fLog, error) {
+	dir := filepath.Dir(cf.Dir)
+	name := filepath.Base(cf.Dir)
+	if name == ""{
+		return nil,fmt.Errorf("name can not empty")
+	}
+	fInfo,err := os.Stat(dir)
+	if err == nil && !fInfo.IsDir(){
+		return nil,fmt.Errorf("%s existed and not a directory ",dir)
+	}
+	if os.IsNotExist(err){
+		if err = os.MkdirAll(cf.Dir,0755);err != nil{
+			return nil,fmt.Errorf("create file err %s",err)
+		}
+	}
+	fp, err := os.OpenFile(cf.Dir, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return nil, err
 	}
