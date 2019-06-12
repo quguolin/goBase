@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	consulapi "github.com/consul/api"
+	consulapi "github.com/hashicorp/consul/api"
 )
 
 const (
