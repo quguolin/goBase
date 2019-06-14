@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	pb "goBase/grpc/proto/api"
+	pb "goBase/grpc/v1/api"
 
 	"google.golang.org/grpc"
 )
