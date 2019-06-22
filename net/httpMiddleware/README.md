@@ -87,7 +87,9 @@ r.Register("/bench", func(c *Context) {
 ```
 
 ###golang框架gin中的实现
+
 ####中间件v3.0
+
 ---
 >核心理念是将中间件和最后的函数 一视同仁 。通过一个for循环遍历具体的可以参考代码
 
