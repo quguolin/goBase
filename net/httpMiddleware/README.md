@@ -1,7 +1,5 @@
-
-
 ## golang http 中间件
-[源码链接](http://www.google.com/)
+[源码链接](https://github.com/quguolin/goBase/tree/master/net/httpMiddleware)
 ---
 golang的http中间件的实现 首先实现一个http的handler接口
 
@@ -28,6 +26,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 就可以做到记录日志 等一些中间件的功能
 
 >2.如果有多个中间件 那么就多个函数 一层一层包裹
+
 ```golang
 func withMiddle(h Handle) Handle {
 	return func(writer http.ResponseWriter, request *http.Request) {
@@ -87,11 +86,10 @@ r.Register("/bench", func(c *Context) {
 	})
 ```
 
-
-####中间件v3.0 golang框架gin中的实现
->核心理念是将中间件和最后的函数 一视同仁 。通过一个for循环遍历
-具体的可以参考代码
+###golang框架gin中的实现
+####中间件v3.0
 ---
+>核心理念是将中间件和最后的函数 一视同仁 。通过一个for循环遍历具体的可以参考代码
 
 ```golang
 func (c *Context) Next() {
