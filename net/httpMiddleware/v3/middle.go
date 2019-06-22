@@ -15,12 +15,6 @@ type Router struct {
 	index  int
 }
 
-func (r *Router) Next(w http.ResponseWriter, req *http.Request) {
-	for ; r.index < len(r.middle); r.index++ {
-		r.middle[r.index](w, req)
-	}
-}
-
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	path := req.URL.String()
 	if v, ok := r.route[path]; ok {
