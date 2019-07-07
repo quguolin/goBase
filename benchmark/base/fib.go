@@ -1,4 +1,4 @@
-package benchmark
+package base
 
 func Fib(n int) int {
 	if n < 2 {

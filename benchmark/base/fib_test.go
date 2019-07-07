@@ -1,4 +1,4 @@
-package benchmark
+package base
 
 import "testing"
 
@@ -7,7 +7,6 @@ func benchmarkFib(i int, b *testing.B) {
 		Fib(i)
 	}
 }
-
 
 func BenchmarkFib1(b *testing.B)  { benchmarkFib(1, b) }
 func BenchmarkFib2(b *testing.B)  { benchmarkFib(2, b) }

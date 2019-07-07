@@ -1,11 +1,11 @@
-package main
+package ioAndCpu
 
 import (
-	"testing"
-	"sync"
 	"fmt"
-	"time"
 	"net/http"
+	"sync"
+	"testing"
+	"time"
 )
 
 //https://medium.com/@cep21/using-go-1-10-new-trace-features-to-debug-an-integration-test-1dc39e4e812d
@@ -13,7 +13,7 @@ func takeCPU(start time.Time, wg *sync.WaitGroup) {
 	defer wg.Done()
 	j := 3
 	for time.Since(start) < time.Second {
-		for i :=1; i < 1000000; i++ {
+		for i := 1; i < 1000000; i++ {
 			j *= i
 		}
 	}
@@ -28,7 +28,7 @@ func takeTimeOnly(wg *sync.WaitGroup) {
 func takeIO(start time.Time, wg *sync.WaitGroup) {
 	defer wg.Done()
 	errCount := 0
-	for time.Since(start) < time.Second * 4{
+	for time.Since(start) < time.Second*4 {
 		_, err := http.Get("https://www.google.com")
 		if err != nil {
 			errCount++
@@ -46,7 +46,6 @@ func startServer() {
 	go takeIO(start, &wg)
 	wg.Wait()
 }
-
 
 func TestServer(t *testing.T) {
 	startServer()
