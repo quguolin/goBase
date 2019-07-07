@@ -24,11 +24,12 @@ func consulCheck(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "consulCheck")
 }
 
-func registerServer() {
+func registerServer() error {
 	config := consulapi.DefaultConfig()
 	client, err := consulapi.NewClient(config)
 	if err != nil {
 		log.Fatal("consul client error : ", err)
+		return err
 	}
 	checkPort := _checkPort
 
@@ -46,15 +47,19 @@ func registerServer() {
 	}
 
 	err = client.Agent().ServiceRegister(registration)
-
 	if err != nil {
 		log.Fatal("register server error : ", err)
+		return err
 	}
-
 	http.HandleFunc("/check", consulCheck)
-	http.ListenAndServe(fmt.Sprintf(":%d", checkPort), nil)
+	if err = http.ListenAndServe(fmt.Sprintf(":%d", checkPort), nil); err != nil {
+		return err
+	}
+	return nil
 }
 
 func main() {
-	registerServer()
+	if err := registerServer(); err != nil {
+		panic(err)
+	}
 }

@@ -91,25 +91,3 @@ func (s *Server) interceptor(ctx context.Context, req interface{}, info *grpc.Un
 	}
 	return s.handlers[0](ctx, req, info, chain)
 }
-
-// authorize function authorizes the token received from Metadata
-//func authorize(ctx context.Context) error {
-//md, ok := metadata.FromIncomingContext(ctx)
-//if !ok {
-//	return status.Errorf(codes.InvalidArgument, "Retrieving metadata is failed")
-//}
-//
-//authHeader, ok := md["authorization"]
-//if !ok {
-//	return status.Errorf(codes.Unauthenticated, "Authorization token is not supplied")
-//}
-//
-//token := authHeader[0]
-//// validateToken function validates the token
-//err := fmt.Errorf("validate token error %s",token)
-//
-//if err != nil {
-//	return status.Errorf(codes.Unauthenticated, err.Error())
-//}
-//return nil
-//}
