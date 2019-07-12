@@ -1,4 +1,4 @@
-package base
+package fib
 
 import "testing"
 
