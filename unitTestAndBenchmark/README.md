@@ -35,4 +35,8 @@
 
 - 生成内存和cpu分析文件 ``go test -bench="BenchmarkWithPool" -cpuprofile cpu.out -memprofile mem.out``
 
-- 分析文件 ``go tool pprof cpu.out``   
+- 分析cpu文件 ``go tool pprof cpu.out``  
+
+- 分析内存文件 ``go tool pprof mem.out`` 
+
+- 输出png图 图中红色方块面积越大 证明申请的内存越大或者消耗cpu越多
