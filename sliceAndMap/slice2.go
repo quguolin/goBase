@@ -1,7 +1,8 @@
 package main
 
 import "fmt"
-func main()  {
+
+func main() {
 	var vals []int
 	for i := 0; i < 5; i++ {
 		vals = append(vals, i)

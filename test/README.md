@@ -9,3 +9,5 @@ go test -cover
 go test -cover -coverprofile=c.out
 go tool cover -html=c.out -o coverage.html 
 ```
+
+https://blog.alexellis.io/golang-writing-unit-tests/

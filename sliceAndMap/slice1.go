@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func test1()  {
+func test1() {
 	vals := make([]int, 5)
 	fmt.Println(vals)
 	for i := 0; i < 5; i++ {
@@ -13,8 +13,8 @@ func test1()  {
 	fmt.Println(vals)
 }
 
-func test2()  {
-	vals := make([]int, 0,5)
+func test2() {
+	vals := make([]int, 0, 5)
 	fmt.Println(vals)
 	for i := 0; i < 5; i++ {
 		vals = append(vals, i)
@@ -26,12 +26,12 @@ type Student struct {
 	Name string
 }
 
-func test3()  {
-	vals := make([]*Student,1)
+func test3() {
+	vals := make([]*Student, 1)
 	fmt.Println(vals)
 }
 
-func test4()  {
+func test4() {
 	vals := make([]int, 5)
 	fmt.Println("Capacity was:", cap(vals))
 	fmt.Println("Length was:", len(vals))
@@ -48,8 +48,7 @@ type Context struct {
 	index int
 }
 
-
-func main()  {
+func main() {
 	//test1()
 	//test2()
 	//test3()
