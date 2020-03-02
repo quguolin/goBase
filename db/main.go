@@ -5,8 +5,9 @@ import (
 	"encoding/json"
 	xtime "example/time"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"time"
+	
+	_ "github.com/go-sql-driver/mysql"
 )
 
 const (
