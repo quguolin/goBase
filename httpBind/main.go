@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"example/net/http-1/binding"
+	"goBase/httpBind/binding"
 )
 
 // User contains user information
