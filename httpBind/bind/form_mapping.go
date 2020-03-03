@@ -55,7 +55,7 @@ func (c *bindCache) set(obj reflect.Type) (s *sinfo) {
 			}
 			if defV := fd.tp.Tag.Get("default"); defV != "" {
 				dv := reflect.New(fd.tp.Type).Elem()
-				setWithProperType(fd.tp.Type.Kind(), []string{defV}, dv, option)
+				setType(fd.tp.Type.Kind(), []string{defV}, dv, option)
 				fd.defaultValues[tagName] = defaultValue{
 					hasDefault: true,
 					value:      dv,
@@ -147,14 +147,14 @@ func assign(ptr interface{}, form map[string][]string) error {
 			}
 			continue
 		}
-		if err := setWithProperType(typeField.Type.Kind(), inputValue, structField, tag.option); err != nil {
+		if err := setType(typeField.Type.Kind(), inputValue, structField, tag.option); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func setWithProperType(valueKind reflect.Kind, val []string, structField reflect.Value, option tagOptions) error {
+func setType(valueKind reflect.Kind, val []string, structField reflect.Value, option tagOptions) error {
 	switch valueKind {
 	case reflect.Int:
 		return setIntField(val[0], 0, structField)
@@ -193,7 +193,7 @@ func setWithProperType(valueKind reflect.Kind, val []string, structField reflect
 		numElems := len(filtered)
 		slice := reflect.MakeSlice(structField.Type(), len(filtered), len(filtered))
 		for i := 0; i < numElems; i++ {
-			if err := setWithProperType(sliceOf, filtered[i:], slice.Index(i), ""); err != nil {
+			if err := setType(sliceOf, filtered[i:], slice.Index(i), ""); err != nil {
 				return err
 			}
 		}
