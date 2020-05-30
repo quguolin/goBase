@@ -11,11 +11,9 @@ import (
 func main()  {
 	addrs := []string{
 		"kafka1:9092",
-		"kafka2:9093",
-		"kafka3:9094",
 	}
 	config := sarama.NewConfig()
-	config.Version = sarama.V2_5_0_0
+	config.Version = sarama.V2_0_0_0
 	admin,err := sarama.NewClusterAdmin(addrs,config)
 	if err != nil{
 		panic(err)

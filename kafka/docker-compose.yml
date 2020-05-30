@@ -15,6 +15,8 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+    networks:
+      default:
 
   zoo2:
     image: wurstmeister/zookeeper
@@ -29,7 +31,8 @@ services:
     environment:
       ZOO_MY_ID: 2
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
-
+    networks:
+      default:
   zoo3:
     image: wurstmeister/zookeeper
     restart: always
@@ -43,7 +46,8 @@ services:
     environment:
       ZOO_MY_ID: 3
       ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
-
+    networks:
+      default:
 
   kafka1:
     image: wurstmeister/kafka
@@ -60,6 +64,8 @@ services:
       - zoo3
     container_name: kafka1
     hostname: kafka1
+    networks:
+      default:
 
   kafka2:
     image: wurstmeister/kafka
@@ -76,7 +82,8 @@ services:
       - zoo3
     container_name: kafka2
     hostname: kafka2
-
+    networks:
+      default:
 
   kafka3:
     image: wurstmeister/kafka
@@ -93,3 +100,10 @@ services:
       - zoo3
     container_name: kafka3
     hostname: kafka3
+    networks:
+      default:
+
+networks:
+  default:
+    external:   # 使用已创建的网络
+      name: zookeeper_network
