@@ -3,12 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"golang.org/x/sync/errgroup"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/golang/sync/errgroup"
 )
 
 func httpGet(ctx context.Context, url string) (value string, err error) {

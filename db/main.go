@@ -3,10 +3,9 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	xtime "example/time"
 	"fmt"
 	"time"
-	
+	"goBase/xtime"
 	_ "github.com/go-sql-driver/mysql"
 )
 
